@@ -15,9 +15,9 @@ echo "[LOG] Set PERCY_PARALLEL_TOTAL to 5"
 
 echo "[LOG] Determining which command to run"
 
-if [[ $var =~ "stop" ]];
+if [[ $var =~ "start" ]] || [[ $var =~ "stop" ]];
 then
-  npx percy exec stop
+  npx percy exec "$2"
   echo "[LOG] Successfully stopped Percy"
 else
   npx percy exec --parallel -- "$2" "$3"
