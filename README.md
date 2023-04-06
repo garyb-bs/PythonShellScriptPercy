@@ -6,18 +6,31 @@
   
 # Running a Shell Script via Python to execute Percy commands
 
-This function and set of shell scripts is designed to show an example of how to execute a shell script in Python with the intention of executing Percy against your test scripts.
+This test, helper class and set of shell scripts is designed to show an example of how to execute a shell script in Python with the intention of executing Percy against your test scripts.
 
 ## Usage
 
 In a terminal, type the following:
 
 ```sh
-python run_percy_command.py
+python my_test.py run_test_via_percy
 ```
 
-There is logic in the code to determine the OS you are running the script from and this will determine which shell script gets picked up. If no matching OS is found (this is highly unlikely!) an Exception is raised.
+By passing the function name "run_test_via_percy" we are telling Python to only execute this particular function. In order for this to work, the following needs to be added to the end of your Python test script:
 
-Using this script you can pass your Percy token and the relevant test command to the shell script.
+```python
+if __name__ == '__main__':
+    globals()[sys.argv[1]]()
+```
 
-You can easily take the function and place it in an existing utility class and use it with your existing project. You can also easily change what is passed to the shell script with some simple changes. This is just a simple example but highly malleable.
+The <b>run_test_via_percy()</b> function calls the utility method to execute the shell script. It passes in the correct function name "run_test" which contains all of our test and Percy snapshot logic. 
+
+```python
+def run_test_via_percy():
+    utils.run_through_percy(percy_token, sys.argv[0], run_test.__name__, str(unique_id))
+```
+
+* `sys.argv[0]` is the first argument, which is the name of the file, so we use this to pass the file to the Percy command.
+* `run_test.__name__` is the way we call the function we want to run
+
+**NOTE:** If you would prefer not to use the if statement above, then you can simply place your test code in a function, and place the <b>run_test_via_percy()</b> function in the same file and call it at the end. Just make sure it has the correct function name for your specific test.
